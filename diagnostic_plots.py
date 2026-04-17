@@ -1,7 +1,8 @@
 
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import cross_validate, StratifiedKFold, train_test_split
+import matplotlib.pyplot as plt
+from sklearn.model_selection import cross_validate, StratifiedKFold, train_test_split, learning_curve
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
@@ -54,7 +55,12 @@ def build_preprocessor():
 
 def run_diagnostic():
     x, y = load_and_prepare()
-    pipeline = get_pipeline()
+    
+    preprocessor = build_preprocessor()
+    pipeline = Pipeline([
+        ("preprocessor", preprocessor),
+        ("model", LogisticRegression(class_weight="balanced", max_iter=1000, random_state=42))
+    ])
 
     train_size = np.linspace(0.1, 1.0, 10)
 
@@ -73,4 +79,20 @@ def run_diagnostic():
     test_std = np.std(test_scores, axis=1)
 
     plt.figure(figsize=(10, 6))
+    plt.plot(train_sizes, train_mean, 'o-', color="#E74C3C", label="Training Score", linewidth=2)
+    plt.fill_between(train_sizes, train_mean - train_std, train_mean + train_std, alpha=0.15, color="#E74C3C")
+
+    plt.plot(train_sizes, test_mean, 'o-', color="#2ECC71", label="Cross-validation Score", linewidth=2)
+    plt.fill_between(train_sizes, test_mean - test_std, test_mean + test_std, alpha=0.15, color="#2ECC71")
+
+    plt.title("Learning Curves Diagnostic (Logistic Regression)", fontsize=14)
+    plt.xlabel("Training Set Size", fontsize=12)
+    plt.ylabel("F1 Score", fontsize=12)
+    plt.legend(loc="lower right")
+    plt.grid(True, linestyle='--', alpha=0.7)
     
+    plt.savefig("learning_diagnostic_plot.png")
+    plt.close()
+
+if __name__ == "__main__":
+    run_diagnostic()
