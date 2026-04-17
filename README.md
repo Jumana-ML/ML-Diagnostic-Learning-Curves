@@ -29,4 +29,4 @@ Increasing model complexity is the recommended next step.
 *   **Hyperparameter Tuning:** Reducing the regularization strength (e.g., increasing the `C` parameter in Logistic Regression) to allow the model to fit the training data more closely.
 
 ## 📈 Metric Justification
-We used the **F1-Score** as our evaluation metric instead of Accuracy. This is because the telecom churn dataset has a significant class imbalance (~16% churn). Accuracy can be misleading in such cases; a model that predicts "No Churn" for everyone would still be 84% accurate but useless. F1-score provides a better balance between Precision and Recall.
+We used the **F1-Score** as our evaluation metric instead of Accuracy. This is because the telecom churn dataset has a significant class imbalance (16% churn). Accuracy can be misleading in such cases; a model that predicts "No Churn" for everyone would still be 84% accurate but useless. F1-score provides a better balance between Precision and Recall.
